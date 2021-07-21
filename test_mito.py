@@ -20,7 +20,7 @@
 # BAK.11,12
 # PRO - apoptotic BH3-only proteins - BINDS - BAX &/OR BAK   (figure 2A - in MOM)
 
-# (1)
+# (1)  ---- DONE IN NEXT_DRAFT file   (just the getting of the poreforming ability)
 # BAX, BAK activated (when bound) (binding--transient interaction)
 #   ^ gain function as result being bound
 #   ^ function is pro-poreforming gain function
@@ -36,7 +36,7 @@
 
 
 
-# BAX-poreforming
+# BAX-poreforming ---- DONE IN NEXT_DRAFT file
 # oligomerization (lookup/assume how many idividuals) -- grouping together
 #
 # n * (BAX-poreforming) <--> BAX-pore
@@ -57,7 +57,7 @@
 # BAX, BID, BIN -- dynamic, need prep-step
 # binding -- balance b/w association & disassociation
 # once bound, hard to bring apart
-### QUESTION -- happens BAX:tBID in cytosol or membrane, or both
+### QUESTION (put already in NEXT_DRAFT) -- happens BAX:tBID in cytosol or membrane, or both
 # BAX + tBID <--> BAX:tBID   (recruitment of complexes, assembly, to membrane -- indiv bind then form)
 # BAX:tBID (in membrane) --> BAX:tBID (stabilized)
 # BAX:tBID (stabilized) <--> BAX + tBID      --- dissociation constant close to zero, hence "stable"
@@ -71,11 +71,13 @@
 # BAX + Ub <--> BAX:Ub (tagging) -- noncovalent
 # BAX:Ub --> BAX:Ub (tagged) -- covalent
 
+# B1 ---- DONE IN NEXT_DRAFT file -- but not tBID (cyto)  <--> tBID (MOM)
+#                  #                  ^ think that's covered in B2, the two pieces in diff places
 # mediated -- catalysis -- caspase8 is doing something
 ## COMPARTMENT - cytosol (C-8 lives there)
 # C-8 + BID <--> C-8:BID
 # c-8:BID --> C-8 + BID(cleaved - p15 --- called tBID) + BID(cleaved - p7)
-# tBID (cytosol) <--> tBID (MOM)
+# tBID (cytosol) <--> tBID (MOM)   (mistype for both being tBID??)
 
 
 
