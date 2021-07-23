@@ -1,5 +1,18 @@
 # KALE 2018 dance of death review
 
+
+# monomers - OPTIONS - called "--L"
+# anti-apoptotic, GUARDIANS
+# BCL-2, BCL-XL, BCL-W, MCL-1, BFL-1/A1
+
+
+# monomers, - OPTIONS - called "B++"
+# PRO-apoptotic (pore-formers)
+# BAX, BAK, BOK
+
+# monomers - OPTIONS - called "BH3+"
+# PRO - apoptotic BH3-only proteins (activating others)
+# BAD, BID, BIK, BIM, BMF, HRK, NOXA, PUMA, etc
 ####### start FIGURE-2- PARTE A ######
 ######################################
 ##### (A1)
@@ -46,11 +59,18 @@
 #  BH3+:--L (covalent bound) -->  BH3+:--L  (inactive --L, both held-up)
 
 ##### (A5)
+##### ---------AMBIGUOUS----------- (figure description; maybe explained in article text)
+####### -- Increases everyone's affinity for everyone else?? Increases whose affinity for who?
+####### -- Increases local concentrations, of WHO, and by HOW MUCH??
+####### -- Reduces diffusion of BCL-2 family proteins by how? hydrophobic balances? direct binding of BCL-2?
+##
 ## parte 5 - "Recruitment of the complexes to the membrane by *constitutive* interactions (e.g. BAK)
 ## [...] increases the affinities and local concentrations and reduces the diffusion of the BCL-2 family proteins."
-# - constitutive - never stops, always ready
+# - constitutive - never stops, always ready, no prep step
+## "complexes" referring to BH3+:--L and --L:B++?? these from A3 & A4
 ### QUESTION -- happens BAX:tBID in cytosol or membrane, or both
-#
+# (A5)(a) complexes are attracted to the membrane by *constitutive* interactions (BAK and others?)
+#     (b) makes everyone more attracted to everyone??
 
 
 
@@ -76,14 +96,27 @@
 ## affinities and off-rates of the interactions."
 
 
-##### (A9)
+##### (A9) ----------AMBIGUOUS---------- in figure, maybe more detail in article-text
+##### -----BIIIG-- AMBIGOUS-NESSSS------ components of retrotranslocation
+### https://github.com/vw-liane/pysb/blob/master/pysb/examples/noo_proteens/bax_hax.py
+########################################
 ## parte 9 - "Interaction of the BH4 region of the anti-apoptotic proteins with BAX shifts the BAX-membrane
 ##  binding equilibrium to favor the unbound state (retrotranslocation, not shown.)
-
-
+# (A9)(a) (alone??) BAX is gravitating towards MOM
+#     (b) unidentified --L "interact" via BH4 region with BAX
+#                 ^^ Ub also plays role? who knows
+#     (c) unidentified --L and BAX (and Ub, etc??) form temporary complex
+#                   ***what are the bonds that keep this complex together?
+#                   ***and what influences these bonds?
+#     (d) BAX is shuttled away from MOM
+#
+#  general rule:: BAX + MOM + --L <--> BAX:MOM + --L   (high reverse rate, thanks to --L)
+#                           ^^not sure how --L "interacts"
+#  BAX (free) <--> BAX:MOM  (represents the getting closer, attempting to bond)
+#  BAX + --L <--> BAX:--L   (temporary shuttling structure, higher forward rate when near MOM)
+#                                                           lower reverse rate when away MOM
 ####### END FIGURE-2- PARTE A ######
 ####################################
-
 
 
 
@@ -169,12 +202,34 @@
 # (proximity of) tBID:MOM:BAX:BCL-XL  -->  BCL-XL:tBID
 # --and/or--
 # (proximity of) tBID:MOM:BAX:BCL-XL  -->  BCL-XL:BAX  (**active shape BAX, but inactive abilities**)
-#
-
 
 ####### END FIGURE-2- PARTE C ######
 ####################################
 
-
 # "BCL-XL is a defective BAX"
 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2858642/
+
+
+####### start FIGURE-2- PARTE D-E ######
+########################################
+##### (D1-E1)
+#####  ---------AMBIGUOUS-----------
+## parte 1 - "BAD inhibits unbound BCL-XLby mutual sequestration.
+##        The affinity of BCL-XL is higher for tBID than for BAX (Tables 1A and 1B) therefre,
+##            in the absence of other regulatory interactions or PTMS [<-- SO SKEPTICAL]
+##            if BCL-XL is bound to tBID and BAX then high concentrations of BAD will displace [INTERESTING]
+##            active BAX (d) and then tBID (e) from BCL-XL resulting in MOMP."
+# (D1-E1)(a) BCL-XL attracted more to tBID than to BAX
+#        (b) "without other interactions happening" [AS IF],
+#               then if BCL-XL:tBID:BAX, "high concentrations of BAD" will steal a dance from BAX
+#                       BCL-XL:tBID:BAX  + 8(BAD) <-->  BCL-XL:tBID:BAD   (high forward with lots of BAD around)
+#        (c) then also kick off tBID
+#                BCL-XL:tBID:BAD  <-->  BCL-XL:BAD + tBID + BAX
+#        (d) then thus let BAX form pores :-D :-D
+#
+##  BCL-XL:tBID:BAX + 8(BAD)  <--> BCL-XL:tBID:BAD  + BAX (free to poreisize)
+##  -- diferent or at same time, with below? --
+##  BCL-XL:tBID:BAD + BAX  <-->  BCL-XL:BAD + BAX (free to poreisize) + tBID
+
+####### END FIGURE-2- PARTE D-E ######
+######################################
