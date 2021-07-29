@@ -6,7 +6,7 @@ Model()
 # anti-apoptotic, GUARDIANS
 # BCL-2, BCL-XL, BCL-W, MCL-1, BFL-1/A1
 ##Monomer('BCL_2')
-Monomer('BCL_XL')
+Monomer('BCL_XL', ['bh3'])
 ##Monomer('BCL_W')
 ##Monomer('MCL_1')
 ##Monomer('BFl_1_A1')
@@ -15,7 +15,7 @@ Monomer('BCLs', ['bh3', 'bh4'])
 # monomers, - OPTIONS - called "B++"
 # PRO-apoptotic (pore-formers)
 # BAX, BAK, BOK
-Monomer('BAX')
+Monomer('BAX', ['bh3'])
 # Monomer('BAK')
 # Monomer('BOK')
 Monomer('PoreFormers', ['bh3'])
@@ -202,7 +202,7 @@ Rule('BH3_bind_BCLs', BH3(bh3=None) + BCLs(bh3=None) | BH3(bh3=1) % BCLs(bh3=1),
 
 ## supposed as 'BAX', but put general PoreFormers           ## below PorefRomer attempting to reach mito_mem
 Rule('BCLs_retrotranslocate_Poreformer_step_1', PoreFormers(bh3=None)**mito_mem + BCLs(bh4=None) |
-     PoreFromers(bh3=1) % BCLs(bh4=1), kf, kr)
+     PoreFormers(bh3=1) % BCLs(bh4=1), kf, kr)
 Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1) % BCLs(bh4=1) |
      PoreFormers(bh3=None)**cytoplasm + BCLs(bh4=None)**cytoplasm, kf, kr)
 
@@ -223,9 +223,9 @@ Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1) % BCLs(bh4=1)
 #     (c) BID is split into two pieces, p7, p15   (loosely connected by hydrophobic interactions)
 #  C8 + BID  <-->  C8:BID  (reversible binding, noncovalent?)
 #  C8:BID  -->  C8 + cBID  (temporary bond chops BID into cBID, which is p15 (tBID) and p7 (unnamed))
-Rule('Caspase8_chops_BID_step_1', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
+Rule('Caspase8_chops_BID_step_1a', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
      Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm, kf, kr)
-Rule('Caspase8_chops_BID_step_2', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
+Rule('Caspase8_chops_BID_step_2a', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
      Caspase8(s1=None)**cytoplasm + clved_BID(s1=None), kf, kr)
 
 ##### (B2)
@@ -242,10 +242,10 @@ Rule('Caspase8_chops_BID_step_2', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytopl
 # cBID (with rapid above binding) --> p7 (cyto) + p15 (tBID, in MOM)
 Rule('BID_cyto_to_mito_mem', BID(bh3=None) ** cytoplasm | BH3(bh3=None) ** mito_mem, *transloc_rates)
 # below same as B1
-Rule('Caspase8_chops_BID_step_1', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
+Rule('Caspase8_chops_BID_step_1b', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
      Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm, kf, kr)
 # below same as B1
-Rule('Caspase8_chops_BID_step_2', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
+Rule('Caspase8_chops_BID_step_2b', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
      Caspase8(s1=None)**cytoplasm + clved_BID(s1=None)**cytoplasm, kf, kr)
 # NEW
 Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
@@ -312,10 +312,10 @@ Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
 # (proximity of) tBID:MOM:BAX:BCL-XL  -->  BCL-XL:BAX  (**active shape BAX, but inactive abilities**)
 ##
 # does BID_p15 have bh3 spot? Can we put location on a bonded species?
-Rule('BIDp15_BAX_recruits_BCL_XL_option_1', (BID_p15(bh3=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
-     (BID_p15(bh3=1)%BCL_XL(bh3=1))**mito_mem + BAX(bh3=None)**cytoplasm, kf, kr)
-Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(bh3=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
-     (BAX(bh3=1)%BCL_XL(bh3=1))**mito_mem + BID_p15(bh3=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
+Rule('BIDp15_BAX_recruits_BCL_XL_option_1', (BID_p15(s1=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
+     (BID_p15(s1=1)%BCL_XL(bh3=1))**mito_mem + BAX(bh3=None)**cytoplasm, kf, kr)
+Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
+     (BAX(bh3=1)%BCL_XL(bh3=1))**mito_mem + BID_p15(s1=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
 
 ####### END FIGURE-2- PARTE C ######
 ####################################
