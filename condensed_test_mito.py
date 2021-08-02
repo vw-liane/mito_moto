@@ -371,19 +371,19 @@ Initial(Caspase8(s1=None)**cytoplasm, Caspase8_0)
 Observable('obBCLs_free', BCLs(bh3=None))
 #Observable('obPoreformers_bound', PoreFormers(bh3=1))
 Observable('obPoreformers_free', PoreFormers(bh3=None))
-Observable('obBAX_bound', BAX(bh3=1))
+#Observable('obBAX_bound', BAX(bh3=1))
 Observable('obBAX_free', BAX(bh3=None))
-Observable('obBID_bound', BID(bh3=1))
+#Observable('obBID_bound', BID(bh3=1))
 Observable('obBID_free', BID(bh3=None))
-Observable('obclved_BID_bound', clved_BID(s1=1)) # ojo
+#Observable('obclved_BID_bound', clved_BID(s1=1)) # ojo
 Observable('obclved_BID_free', clved_BID(s1=None))  # ojo
-Observable('obBID_p7_bound', BID_p7(s1=1))
+#Observable('obBID_p7_bound', BID_p7(s1=1))
 Observable('obBID_p7_free', BID_p7(s1=None))
-Observable('obBID_p15_bound', BID_p15(s1=1))
+#Observable('obBID_p15_bound', BID_p15(s1=1))
 Observable('obBID_p15_free', BID_p15(s1=None))
-Observable('obBH3s_bound', BH3s(bh3=1))
+#Observable('obBH3s_bound', BH3s(bh3=1))
 Observable('obBH3s_free', BH3s(bh3=None))
-Observable('obCaspase8_bound', Caspase8(s1=1))
+#Observable('obCaspase8_bound', Caspase8(s1=1))
 Observable('obCaspase8_free', Caspase8(s1=None))
 ## END OBSERVABLES ##
 #####################
