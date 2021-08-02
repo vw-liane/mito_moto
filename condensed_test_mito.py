@@ -347,26 +347,29 @@ Parameter('BID_p15_0', 4800)
 Parameter('BH3s_0', 10000)         # generic-pro
 Parameter('Caspase8_0', 12000)
 # # # # #   # # # # #
-Initial(BCLs(bh3=None, bh4=None), BCLs_0)
-Initial(BCL_XL(bh3=None), BCL_XL_0)
-Initial(Poreformers(bh3=None), Poreformers_0)
-Initial(BAX(bh3=None), BAX_0)
-Initial(BID(bh3=None), BID_0)
-Initial(clved_BID(s1=None), clved_BID_0)
-Initial(BID_p7(s1=None), BID_p7_0)
-Initial(BID_p15(s1=None), BID_p15_0)
-Initial(BH3s(bh3=None), BH3s_0)
-Initial(Caspase8(s1=None), Caspase8_0)
+## specify location to make "concrete"
+## ^^i.e. compartment
+# # # # but what if things live everywhere?
+Initial(BCLs(bh3=None, bh4=None)**cytoplasm, BCLs_0)
+Initial(BCL_XL(bh3=None)**mito_mem, BCL_XL_0)
+Initial(PoreFormers(bh3=None)**cytoplasm, Poreformers_0)
+Initial(BAX(bh3=None)**cytoplasm, BAX_0)
+Initial(BID(bh3=None)**cytoplasm, BID_0)
+Initial(clved_BID(s1=None)**cytoplasm, clved_BID_0)
+Initial(BID_p7(s1=None)**cytoplasm, BID_p7_0)
+Initial(BID_p15(s1=None)**cytoplasm, BID_p15_0)
+Initial(BH3s(bh3=None)**cytoplasm, BH3s_0)
+Initial(Caspase8(s1=None)**cytoplasm, Caspase8_0)
 ## END INITIAL CONDITIONS ##
 ############################  # time_0
 
 
 ## -START- OBSERVABLES ##
 #########################
-Observable('obBCLs_bound_bh3', BCLs(bh3=1))
-Observable('obBCLs_bound_bh4', BCLs(bh4=1))
+#Observable('obBCLs_bound_bh3', BCLs(bh3=1))  # gave dangling bond error
+#Observable('obBCLs_bound_bh4', BCLs(bh4=1))   # gave dangling bond erro
 Observable('obBCLs_free', BCLs(bh3=None))
-Observable('obPoreformers_bound', PoreFormers(bh3=1))
+#Observable('obPoreformers_bound', PoreFormers(bh3=1))
 Observable('obPoreformers_free', PoreFormers(bh3=None))
 Observable('obBAX_bound', BAX(bh3=1))
 Observable('obBAX_free', BAX(bh3=None))
