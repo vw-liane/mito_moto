@@ -1,9 +1,9 @@
-from next_draft_test_mito import model as md
+from condensed_test_mito import model as md
 from pysb.simulator import ScipyOdeSimulator
 import pylab as pl
 
 t = pl.linspace(0, 20000)  # num seconds for simulation
-sim_results = ScipyOdeSimulator(md.model, tspan=t).run()
+sim_results = ScipyOdeSimulator(md, tspan=t).run()
 y_out = sim_results.all
 
 
