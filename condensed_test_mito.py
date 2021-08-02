@@ -88,8 +88,6 @@ Rule('BH3s_cyto_to_mito_mem_0', BH3s(bh3=None) ** cytoplasm | BH3s(bh3=None) ** 
 ### BH3s generic monomer, recruits
 Rule('BH3s_recruit_poreformers', BH3s(bh3=None)**mito_mem + PoreFormers(bh3=None)**cytoplasm |
      BH3s(bh3=1)**mito_mem % PoreFormers(bh3=1)**mito_mem, kf, kr)
-
-
 # pore formation can be specific
 
 
@@ -183,9 +181,9 @@ Rule('BH3s_bind_BCLs', BH3s(bh3=None) + BCLs(bh3=None) | BH3s(bh3=1) % BCLs(bh3=
 #                                                           lower reverse rate when away MOM
 
 ## supposed as 'BAX', but put general PoreFormers           ## below PorefRomer attempting to reach mito_mem
-Rule('BCLs_retrotranslocate_Poreformer_step_1', PoreFormers(bh3=None)**mito_mem + BCLs(bh4=None) |
-     PoreFormers(bh3=1) % BCLs(bh4=1), kf, kr)
-Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1) % BCLs(bh4=1) |
+Rule('BCLs_retrotranslocate_Poreformer_step_1', PoreFormers(bh3=None)**mito_mem + BCLs(bh4=None)**cytoplasm |
+     PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm, kf, kr)
+Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm |
      PoreFormers(bh3=None)**cytoplasm + BCLs(bh4=None)**cytoplasm, kf, kr)
 
 ####### END FIGURE-2- PARTE A ######
@@ -294,10 +292,10 @@ Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
 # (proximity of) tBID:MOM:BAX:BCL-XL  -->  BCL-XL:BAX  (**active shape BAX, but inactive abilities**)
 ##
 # does BID_p15 have bh3 spot? Can we put location on a bonded species?
-Rule('BIDp15_BAX_recruits_BCL_XL_option_1', (BID_p15(s1=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
-     (BID_p15(s1=1)%BCL_XL(bh3=1))**mito_mem + BAX(bh3=None)**cytoplasm, kf, kr)
-Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)% BAX(bh3=1))**mito_mem + BCL_XL(bh3=None)**cytoplasm |
-     (BAX(bh3=1)%BCL_XL(bh3=1))**mito_mem + BID_p15(s1=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
+Rule('BIDp15_BAX_recruits_BCL_XL_option_1', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
+     (BID_p15(s1=1)**mito_mem%BCL_XL(bh3=1)**mito_mem) + BAX(bh3=None)**cytoplasm, kf, kr)
+Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
+     (BAX(bh3=1)**mito_mem%BCL_XL(bh3=1)**mito_mem) + BID_p15(s1=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
 
 ####### END FIGURE-2- PARTE C ######
 ####################################
