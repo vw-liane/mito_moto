@@ -410,7 +410,7 @@ Observable('obBID_p7_free', BID_p7(s1=None))
 Observable('obBID_p15_free', BID_p15(s1=None))
 #Observable('obBH3s_bound', BH3s(bh3=1))
 Observable('obBH3s_free', BH3s(bh3=None))
-#Observable('obCaspase8_bound', Caspase8(s1=1))
+Observable('obCaspase8_bound', Caspase8(s1=7))
 Observable('obCaspase8_free', Caspase8(s1=None))
 ## END OBSERVABLES ##
 #####################
