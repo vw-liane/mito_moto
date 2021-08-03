@@ -242,7 +242,7 @@ Rule('OptionB_Caspase8_chops_BID_step_1', Caspase8(s1=None)**cytoplasm + BID(bh3
 ##########  ----------------  undo BOND 8
 Rule('OptionB_Caspase8_chops_BID_step_2', Caspase8(s1=8)**cytoplasm % BID(bh3=8)**cytoplasm |
      Caspase8(s1=None)**cytoplasm + clved_BID(s1=None)**cytoplasm, kf, kr)
-## is above dangling - BID
+## is above dangling?? - BID
 # NEW
 Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm |
      BID_p7(s1=None) + BID_p15(s1=None), kf, kr)   # make kf very high?
@@ -401,22 +401,21 @@ Observable('obBCLs_bound_BH3s', BCLs(bh4=3)%BH3s(bh3=3))
 Observable('obBCL_sequester_PoreFormers', BCLs(bh3=4)%PoreFormers(bh3=4))
 Observable('obBH3s_sequester_BCLs', BH3s(bh3=5)%BCLs(bh3=5))
 Observable('ob_step1_BCLs_retrotranslocate_PoreFormers', PoreFormers(bh3=6)%BCLs(bh4=6))
-#Observable('obPoreformers_bound', PoreFormers(bh3=1))
+Observable('obCaspase8_bound_BID_optionA', Caspase8(s1=7)%BID(bh3=7)) # is diff prestep
+Observable('obCaspase8_bound_BID_optionB', Caspase8(s1=8)%BID(bh3=8)) # is diff prestep
+Observable('obBID_p15_bound_BAX', BID_p15(s1=9)%BAX(bh3=9))
+Observable('obBID_p15_bound_BAX_pore', BID_p15(s1=10)%BAX_pore(t1=10))
+Observable('obBID_p15_bound_BAX_pre_BCLXL', BID_p15(s1=11)%BAX(bh3=11)) # is prestep for 12 & 13
+Observable('obBID_p15_bound_BCLXL', BID_p15(s1=12)%BCL_XL(bh3=12))
+Observable('BAX_bound_BCLXL_after_BIDp15', BAX(bh3=13)%BCL_XL(bh3=13))
 Observable('obPoreformers_free', PoreFormers(bh3=None))
-#Observable('obBAX_bound', BAX(bh3=1))
 Observable('obBAX_free', BAX(bh3=None))
-#Observable('obBID_bound', BID(bh3=1))
 Observable('obBID_free', BID(bh3=None))
-#Observable('obclved_BID_bound', clved_BID(s1=1)) # ojo
 Observable('obclved_BID_free', clved_BID(s1=None))  # ojo
-#Observable('obBID_p7_bound', BID_p7(s1=1))
-Observable('obBID_p7_free', BID_p7(s1=None))
-#Observable('obBID_p15_bound', BID_p15(s1=1))
-Observable('obBID_p15_free', BID_p15(s1=None))
-#Observable('obBH3s_bound', BH3s(bh3=1))
+Observable('obBID_p7_freefrom_clvedBID', BID_p7(s1=None))
+Observable('obBID_p15_freefrom_clvedBID', BID_p15(s1=None))
 Observable('obBH3s_free', BH3s(bh3=None))
-Observable('obCaspase8_bound_BID_optionA', Caspase8(s1=7)%BID(bh3=7)) # diff prestep
-Observable('obCaspase8_bound_BID_optionB', Caspase8(s1=8)%BID(bh3=8)) # diff prestep
+
 Observable('obCaspase8_free', Caspase8(s1=None))
 ## END OBSERVABLES ##
 #####################
