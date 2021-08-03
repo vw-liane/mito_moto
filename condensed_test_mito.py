@@ -12,8 +12,9 @@ Monomer('BCL_XL', ['bh3'])
 
 # PRO-apoptotic (pore-formers), "B++"
 # BAX, BAK, BOK
-Monomer('PoreFormers', ['bh3'])
+Monomer('PoreFormers', ['bh3']) # zero
 Monomer('BAX', ['bh3'])
+Monomer('BAX_pore', ['t1'])
 
 # PRO-apoptotic BH3-only proteins (activating others), "BH3+"
 # BAD, BID, BIK, BIM, BMF, HRK, NOXA, PUMA, etc
@@ -42,8 +43,19 @@ mito_fractional_volume = 0.07
 rate_scaling_factor = 1./mito_fractional_volume
 Parameter('mito_vol', 5e-16) #cubic (liter)
 Parameter('cyto_vol', 1e-12)  # -- Google this
+Parameter('cell_vol', mito_vol + cyto_vol)
+# sum of cyto vol and mitochondria volume for capital VV
+##   pseudoc arbrtrary
+# BCL2, BAX, monomers specified concentration
+## pick ballpark number, similar to numbers we do have
 ## END MY PARAMETERS (generic) ##
 #################################
+
+
+
+
+# cleaved and tBID (going to be products)
+# set initial concentration to zero
 
 
 ## -START- COMPARTMENTS ##
@@ -96,9 +108,8 @@ Rule('BH3s_recruit_poreformers', BH3s(bh3=None)**mito_mem + PoreFormers(bh3=None
 ## the activator BH3-only proteins and ..." by mutual sequestration
 # (A2)(a) anti-apoptotic (--L) bind to BH3+
 #     (b) --L and BH3+ are held up from further action
-#  --L + BH3+  <--> --L:BH3+  (reversible binding, noncovalent?)
-#  --L:BH3+   -->   --L:BH3+  (covalent bond)
-#  --L:BH3+ (covalent)  --> --L:BH3+  (both held-up)
+#  --L + BH3+  <--> --L:BH3+  (reversible binding, noncovalent, temporary inhibition)
+### condense the chemistry above, layman's
 Rule('BCLs_bind_BH3s', BCLs(bh3=None) + BH3s(bh3=None) | BCLs(bh3=1) % BH3s(bh3=1), kf, kr)
 
 
@@ -107,8 +118,6 @@ Rule('BCLs_bind_BH3s', BCLs(bh3=None) + BH3s(bh3=None) | BCLs(bh3=1) % BH3s(bh3=
 # (A3)(a) anti-apoptotic (--L) bind to B++
 #     (b) --L and B++ are held up from further action
 #  --L + B++  <--> --L:B++  (reversible binding, noncovalent?)
-#  --L:B++   -->   --L:B++  (covalent bond)
-#  --L:B++ (covalent)  --> --L:B++  (both held-up)
 Rule('BCLs_bind_Poreformers', BCLs(bh3=None) + PoreFormers(bh3=None) | BCLs(bh3=1) % PoreFormers(bh3=1), kf, kr)
 
 ##### (A4)
@@ -185,7 +194,6 @@ Rule('BCLs_retrotranslocate_Poreformer_step_1', PoreFormers(bh3=None)**mito_mem 
      PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm, kf, kr)
 Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm |
      PoreFormers(bh3=None)**cytoplasm + BCLs(bh4=None)**cytoplasm, kf, kr)
-
 ####### END FIGURE-2- PARTE A ######
 ####################################
 
@@ -194,7 +202,7 @@ Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1)**cytoplasm % 
 ####### start FIGURE-2- PARTE B ######
 ######################################
 ##### (B1)
-## parte 1 - "BID is activated by caspase-8 mediated cleavage to cBID (cleaved BID) a protein comprise of two fragments
+## parte 1 - "BID is activated by caspase-8 mediated cleavage to cBID (cleaved BID) a protein comprised of two fragments
 ## BID-P7 and BID-P15 held together by hydrophobic interactions."
 ## COMPARTMENT - cytosol (C8 lives there)
 # mediated catalysis - C8 doing something
@@ -334,16 +342,19 @@ Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)*
 
 ## -START- INITIAL CONDITIONS ##
 ################################  # time_0
-Parameter('BCLs_0', 10000)         # generic-anti
-Parameter('BCL_XL_0', 10000)
-Parameter('Poreformers_0', 10000) # generic-pro
-Parameter('BAX_0', 10000)
-Parameter('BID_0', 10000)
-Parameter('clved_BID_0', 5000)
-Parameter('BID_p7_0', 4800)
-Parameter('BID_p15_0', 4800)
-Parameter('BH3s_0', 10000)         # generic-pro
-Parameter('Caspase8_0', 12000)
+# from EARM - https://github.com/LoLab-VU/earm/blob/master/earm/albeck_modules.py
+Parameter('BCLs_0', 2e4)         # EARM - BCL2 val
+Parameter('BCL_XL_0', 2e4)       # EARM - BCL2 val
+Parameter('Poreformers_0', 1e5)  # EARM - BAX val
+Parameter('BAX_0', 1e5)          # EARM - BAX val
+Parameter('BID_0', 4e4)          # EARM - BID val
+Parameter('clved_BID_0', 0)
+Parameter('BID_p7_0', 0)
+Parameter('BID_p15_0', 0)
+Parameter('BH3s_0', 4e4)         # EARM - BID val
+Parameter('Caspase8_0', 2.0e4)   # EARM - C8 val
+# # # # #   # # # # #
+
 # # # # #   # # # # #
 ## specify location to make "concrete"
 ## ^^i.e. compartment
