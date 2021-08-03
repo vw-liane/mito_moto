@@ -33,11 +33,12 @@ Monomer('Caspase8', ['s1'])
 ## -START- PARAMETERS (generic) ##
 ##################################
 # #later diff params for each reaction
+# from https://github.com/LoLab-VU/earm/blob/master/earm/albeck_modules.py
 Parameter('kf', 1e-6)
 Parameter('kr', 1e-3)
 Parameter('kc', 1e-0)
 
-transloc_rates = [Parameter('forward', 1e-2), Parameter('reverse', 1e-2)]
+transloc_rates = [Parameter('move_forward', 1e-2), Parameter('move_reverse', 1e-2)]
 
 ## copy what EARM doing, for cell/ mito volume
 mito_fractional_volume = 0.07
@@ -51,10 +52,6 @@ Parameter('cell_vol', (5e-16) + (1e-12))
 ## pick ballpark number, similar to numbers we do have
 ## END MY PARAMETERS (generic) ##
 #################################
-
-
-# cleaved and tBID (going to be products)
-# set initial concentration to zero
 
 
 ## -START- COMPARTMENTS ##
@@ -393,29 +390,31 @@ Initial(Caspase8(s1=None)**cytoplasm, Caspase8_0)
 
 ## -START- OBSERVABLES ##
 #########################
-Observable('obBCLs_free_bh3', BCLs(bh3=None))
-Observable('obBCLs_free_bh4', BCLs(bh4=None))
+## added location to match resulting species
+Observable('obBCLs_free_bh3', BCLs(bh3=None)**cytoplasm)
+Observable('obBCLs_free_bh4', BCLs(bh4=None)**cytoplasm)
 Observable('obBCLs_1__bound_bh3', BCLs(bh3=1)%PoreFormers(bh3=1))
-Observable('obBCLs_bound_to_PORE', BCLs(bh3=2)%PORE(t1=2))
+Observable('obBCLs_bound_to_PORE', BCLs(bh3=2)**mito_mem%PORE(t1=2)**mito_mem)
 Observable('obBCLs_bound_BH3s', BCLs(bh4=3)%BH3s(bh3=3))
+Observable('BCL_XL_free_mitomem', BCL_XL(bh3=None)**mito_mem)
 Observable('obBCL_sequester_PoreFormers', BCLs(bh3=4)%PoreFormers(bh3=4))
 Observable('obBH3s_sequester_BCLs', BH3s(bh3=5)%BCLs(bh3=5))
 Observable('ob_step1_BCLs_retrotranslocate_PoreFormers', PoreFormers(bh3=6)%BCLs(bh4=6))
 Observable('obCaspase8_bound_BID_optionA', Caspase8(s1=7)%BID(bh3=7)) # is diff prestep
 Observable('obCaspase8_bound_BID_optionB', Caspase8(s1=8)%BID(bh3=8)) # is diff prestep
 Observable('obBID_p15_bound_BAX', BID_p15(s1=9)%BAX(bh3=9))
-Observable('obBID_p15_bound_BAX_pore', BID_p15(s1=10)%BAX_pore(t1=10))
+Observable('obBID_p15_bound_BAX_pore', BID_p15(s1=10)%BAX_pore(t1=10)**mito_mem)
 Observable('obBID_p15_bound_BAX_pre_BCLXL', BID_p15(s1=11)%BAX(bh3=11)) # is prestep for 12 & 13
 Observable('obBID_p15_bound_BCLXL', BID_p15(s1=12)%BCL_XL(bh3=12))
 Observable('BAX_bound_BCLXL_after_BIDp15', BAX(bh3=13)%BCL_XL(bh3=13))
-Observable('obPoreformers_free', PoreFormers(bh3=None))
-Observable('obBAX_free', BAX(bh3=None))
+Observable('obPoreformers_free', PoreFormers(bh3=None)**cytoplasm)
+Observable('obBAX_free', BAX(bh3=None)**cytoplasm)
 Observable('obBID_free', BID(bh3=None))
-Observable('obclved_BID_free', clved_BID(s1=None))  # ojo
-Observable('obBID_p7_freefrom_clvedBID', BID_p7(s1=None))
-Observable('obBID_p15_freefrom_clvedBID', BID_p15(s1=None))
-Observable('obBH3s_free', BH3s(bh3=None))
+Observable('obclved_BID_free', clved_BID(s1=None)**cytoplasm)  # ojo
+Observable('obBID_p7_freefrom_clvedBID', BID_p7(s1=None)**cytoplasm)
+Observable('obBID_p15_freefrom_clvedBID', BID_p15(s1=None)**cytoplasm)
+Observable('obBH3s_free', BH3s(bh3=None)**cytoplasm)
 
-Observable('obCaspase8_free', Caspase8(s1=None))
+Observable('obCaspase8_free', Caspase8(s1=None)**cytoplasm)
 ## END OBSERVABLES ##
 #####################
