@@ -12,7 +12,8 @@ Monomer('BCL_XL', ['bh3'])
 
 # PRO-apoptotic (pore-formers), "B++"
 # BAX, BAK, BOK
-Monomer('PoreFormers', ['bh3']) # zero
+Monomer('PoreFormers', ['bh3'])
+Monomer('PORE', ['t1'])
 Monomer('BAX', ['bh3'])
 Monomer('BAX_pore', ['t1'])
 
@@ -43,15 +44,13 @@ mito_fractional_volume = 0.07
 rate_scaling_factor = 1./mito_fractional_volume
 Parameter('mito_vol', 5e-16) #cubic (liter)
 Parameter('cyto_vol', 1e-12)  # -- Google this
-Parameter('cell_vol', mito_vol + cyto_vol)
+Parameter('cell_vol', (5e-16) + (1e-12))
 # sum of cyto vol and mitochondria volume for capital VV
-##   pseudoc arbrtrary
+##   pseudocode arbitrary
 # BCL2, BAX, monomers specified concentration
 ## pick ballpark number, similar to numbers we do have
 ## END MY PARAMETERS (generic) ##
 #################################
-
-
 
 
 # cleaved and tBID (going to be products)
@@ -71,6 +70,8 @@ Compartment('mito_mem', dimension=2, size=mito_vol, parent=cytoplasm)
 ## END MY COMPARTMENTS ##
 #########################
 
+
+
 ### -START- LAS REGLAS ###
 # -- -- -- -- -- -- -- - #
 # -- -- -- -- -- -- -- - #
@@ -88,19 +89,18 @@ Compartment('mito_mem', dimension=2, size=mito_vol, parent=cytoplasm)
 #     (c) when B++ are bound to BH3+, B++ gain a MOM-permeability function, to also make pores
 ## COMPARTMENT - membrane       .... ## only when not bound or works also when bound to
 #  BH3+ (free)  <-->  BH3+:MOM
-#  BH3+:MOM + B++  <-->   BH3+:MOM:B++ (high forward rate, noncovalent?)
-#  BH3+:MOM:B++  -->  BH3+:MOM:B++  (covalent bond)
-#  BH3+:MOM:B++  -->  BH3:MOM:B++ (pore-forming ability - B++)
-
-## BH3s                          --- BH3s _generic_monomer
+#  BH3+:MOM + B++  <-->   BH3+:MOM:B++ (high forward rate, noncovalent, pore-forming ability - B++)
+#  n * (BH3+:MOM:B++ (poreforming))  <-->  B++-pore  (unknown forward rate)
+#   ^^ minimum 2
+## BH3s - unspecified, later in figure say is tBID
 Rule('BH3s_cyto_to_mito_mem_0', BH3s(bh3=None) ** cytoplasm | BH3s(bh3=None) ** mito_mem, *transloc_rates)
-
 # second step rule
-# change each to other monomer
-### BH3s generic monomer, recruits
+##########  ----------------  MAKE BOND 1
 Rule('BH3s_recruit_poreformers', BH3s(bh3=None)**mito_mem + PoreFormers(bh3=None)**cytoplasm |
      BH3s(bh3=1)**mito_mem % PoreFormers(bh3=1)**mito_mem, kf, kr)
-# pore formation can be specific
+##########  ----------------  MAKE BOND 2
+Rule('PoreFormers_make_pores', BH3s(bh3=1)**mito_mem % PoreFormers(bh3=1)**mito_mem |
+     BH3s(bh3=2)**mito_mem % PORE(t1=2)**mito_mem, kf, kr)
 
 
 ##### (A2)
@@ -110,25 +110,27 @@ Rule('BH3s_recruit_poreformers', BH3s(bh3=None)**mito_mem + PoreFormers(bh3=None
 #     (b) --L and BH3+ are held up from further action
 #  --L + BH3+  <--> --L:BH3+  (reversible binding, noncovalent, temporary inhibition)
 ### condense the chemistry above, layman's
-Rule('BCLs_bind_BH3s', BCLs(bh3=None) + BH3s(bh3=None) | BCLs(bh3=1) % BH3s(bh3=1), kf, kr)
+##########  ----------------  MAKE BOND 3
+Rule('BCLs_bind_BH3s', BCLs(bh3=None) + BH3s(bh3=None) | BCLs(bh3=3) % BH3s(bh3=3), kf, kr)
 
 
 ##### (A3)
 ## parte 3 - " and the pore-forming proteins by mutual sequestration (T'd arrows)."
 # (A3)(a) anti-apoptotic (--L) bind to B++
 #     (b) --L and B++ are held up from further action
-#  --L + B++  <--> --L:B++  (reversible binding, noncovalent?)
-Rule('BCLs_bind_Poreformers', BCLs(bh3=None) + PoreFormers(bh3=None) | BCLs(bh3=1) % PoreFormers(bh3=1), kf, kr)
+#  --L + B++  <--> --L:B++  (reversible binding, noncovalent)
+##########  ----------------  MAKE BOND 4
+Rule('BCLs_bind_Poreformers', BCLs(bh3=None) + PoreFormers(bh3=None) | BCLs(bh3=4) % PoreFormers(bh3=4), kf, kr)
 
 ##### (A4)
 ## parte 4 - "The sensitizer BH3-only proteins (e.g. BAD, NOXA) bind to and inhibit the anti-apoptotic
 ## proteins also by mutual sequestration."
 # (A4)(a) BH3+ bind to --L
 #     (b) --L and BH3+ are held up from further action
-#  BH3+ + --L   <-->  BH3+:--L    (reversible binding, noncovalent?)
-#  BH3+:--L  -->  BH3+:--L  (covalent bond)
-#  BH3+:--L (covalent bound) -->  BH3+:--L  (inactive --L, both held-up)
-Rule('BH3s_bind_BCLs', BH3s(bh3=None) + BCLs(bh3=None) | BH3s(bh3=1) % BCLs(bh3=1), kf, kr)
+#  BH3+ + --L   <-->  BH3+:--L    (reversible binding, noncovalent)
+##########  ----------------  MAKE BOND 5
+Rule('BH3s_bind_BCLs', BH3s(bh3=None) + BCLs(bh3=None) | BH3s(bh3=5) % BCLs(bh3=5), kf, kr)
+
 
 ##### (A5)
 ##### ---------AMBIGUOUS----------- (figure description; maybe explained in article text)
@@ -190,9 +192,11 @@ Rule('BH3s_bind_BCLs', BH3s(bh3=None) + BCLs(bh3=None) | BH3s(bh3=1) % BCLs(bh3=
 #                                                           lower reverse rate when away MOM
 
 ## supposed as 'BAX', but put general PoreFormers           ## below PorefRomer attempting to reach mito_mem
+##########  ----------------  MAKE BOND 6
 Rule('BCLs_retrotranslocate_Poreformer_step_1', PoreFormers(bh3=None)**mito_mem + BCLs(bh4=None)**cytoplasm |
-     PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm, kf, kr)
-Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1)**cytoplasm % BCLs(bh4=1)**cytoplasm |
+     PoreFormers(bh3=6)**cytoplasm % BCLs(bh4=6)**cytoplasm, kf, kr)
+##########  ----------------  undo BOND 6
+Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=6)**cytoplasm % BCLs(bh4=6)**cytoplasm |
      PoreFormers(bh3=None)**cytoplasm + BCLs(bh4=None)**cytoplasm, kf, kr)
 ####### END FIGURE-2- PARTE A ######
 ####################################
@@ -211,9 +215,11 @@ Rule('BCLs_retrotranslocate_Poreformer_step_2', PoreFormers(bh3=1)**cytoplasm % 
 #     (c) BID is split into two pieces, p7, p15   (loosely connected by hydrophobic interactions)
 #  C8 + BID  <-->  C8:BID  (reversible binding, noncovalent?)
 #  C8:BID  -->  C8 + cBID  (temporary bond chops BID into cBID, which is p15 (tBID) and p7 (unnamed))
-Rule('Caspase8_chops_BID_step_1a', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
-     Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm, kf, kr)
-Rule('Caspase8_chops_BID_step_2a', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
+##########  ----------------  MAKE BOND 7
+Rule('optionA_Caspase8_chops_BID_step_1', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
+     Caspase8(s1=7)**cytoplasm % BID(bh3=7)**cytoplasm, kf, kr)
+##########  ----------------  undo BOND 7
+Rule('optionA_Caspase8_chops_BID_step_2', Caspase8(s1=7)**cytoplasm % BID(bh3=7)**cytoplasm |
      Caspase8(s1=None)**cytoplasm + clved_BID(s1=None), kf, kr)
 
 ##### (B2)
@@ -230,13 +236,15 @@ Rule('Caspase8_chops_BID_step_2a', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytop
 # cBID (with rapid above binding) --> p7 (cyto) + p15 (tBID, in MOM)
 Rule('BID_cyto_to_mito_mem', BID(bh3=None) ** cytoplasm | BH3s(bh3=None) ** mito_mem, *transloc_rates)
 # below same as B1
-Rule('Caspase8_chops_BID_step_1b', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
-     Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm, kf, kr)
-# below same as B1
-Rule('Caspase8_chops_BID_step_2b', Caspase8(s1=1)**cytoplasm % BID(bh3=1)**cytoplasm |
+##########  ----------------  MAKE BOND 8
+Rule('OptionB_Caspase8_chops_BID_step_1', Caspase8(s1=None)**cytoplasm + BID(bh3=None)**cytoplasm |
+     Caspase8(s1=8)**cytoplasm % BID(bh3=8)**cytoplasm, kf, kr)
+##########  ----------------  undo BOND 8
+Rule('OptionB_Caspase8_chops_BID_step_2', Caspase8(s1=8)**cytoplasm % BID(bh3=8)**cytoplasm |
      Caspase8(s1=None)**cytoplasm + clved_BID(s1=None)**cytoplasm, kf, kr)
+## is above dangling - BID
 # NEW
-Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
+Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm |
      BID_p7(s1=None) + BID_p15(s1=None), kf, kr)   # make kf very high?
 
 
@@ -257,13 +265,15 @@ Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
 #     (b) tBID attracts inactive BAX from cytosol
 #     (c) tBID activates BAX, meaning BAX gets pore-forming abilities
 #     (d) Unspecified num BAX go into membrane and form a pore
-#  tBID (free)  <-->  tBID:MOM
-#  tBID:MOM + BAX  <-->   tBID:MOM:BAX (high forward rate, noncovalent?)
-#  tBID:MOM:BAX  -->  tBID:MOM:BAX  (covalent bond)
-#  tBID:MOM:BAX  -->  tBID:MOM:BAX (pore-forming ability - BAX)
-# n * (tBID:MOM:BAX (poreforming))  <-->  BAX-pore    (unknown forward rate)
-
-
+#  tBID:MOM + BAX  <-->   tBID:MOM:BAX (high forward rate, noncovalent, pore-forming ability - BAX)
+#  n * (tBID:MOM:BAX (poreforming))  <-->  BAX-pore  (unknown forward rate)
+##########  ----------------  MAKE BOND 9
+Rule('tBID_recruits_BAX', BID_p15(s1=None)**mito_mem + BAX(bh3=None)**cytoplasm |
+     BID_p15(s1=9)**mito_mem % BAX(bh3=9)**mito_mem, kf, kr)
+##########  ----------------  MAKE BOND 10
+Rule('make_BAX_pore', BID_p15(s1=9)**mito_mem % BAX(bh3=9)**mito_mem |
+     BID_p15(s1=10)**mito_mem % BAX_pore(t1=10)**mito_mem, kf, kr)
+## is above dangling - BAX single
 
 ####### END FIGURE-2- PARTE B ######
 ####################################
@@ -300,10 +310,14 @@ Rule('clved_BID_splits_more', clved_BID(s1=None)**cytoplasm | \
 # (proximity of) tBID:MOM:BAX:BCL-XL  -->  BCL-XL:BAX  (**active shape BAX, but inactive abilities**)
 ##
 # does BID_p15 have bh3 spot? Can we put location on a bonded species?
-Rule('BIDp15_BAX_recruits_BCL_XL_option_1', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
-     (BID_p15(s1=1)**mito_mem%BCL_XL(bh3=1)**mito_mem) + BAX(bh3=None)**cytoplasm, kf, kr)
-Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
-     (BAX(bh3=1)**mito_mem%BCL_XL(bh3=1)**mito_mem) + BID_p15(s1=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
+#
+##########  ----------------  MAKE BOND 11
+##########  ----------------  MAKE BOND 12
+Rule('Option1_BIDp15_BAX_recruits_BCL_XL', (BID_p15(s1=11)**mito_mem%BAX(bh3=11)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
+     (BID_p15(s1=12)**mito_mem%BCL_XL(bh3=12)**mito_mem) + BAX(bh3=None)**cytoplasm, kf, kr)
+##########  ----------------  MAKE BOND 13
+Rule('Option2_BIDp15_BAX_recruits_BCL_XL', (BID_p15(s1=11)**mito_mem%BAX(bh3=11)**mito_mem) + BCL_XL(bh3=None)**cytoplasm |
+     (BAX(bh3=13)**mito_mem%BCL_XL(bh3=13)**mito_mem) + BID_p15(s1=None)**cytoplasm, kf, kr)  # tBID goes to cytoplasm???
 
 ####### END FIGURE-2- PARTE C ######
 ####################################
@@ -346,7 +360,9 @@ Rule('BIDp15_BAX_recruits_BCL_XL_option_2', (BID_p15(s1=1)**mito_mem%BAX(bh3=1)*
 Parameter('BCLs_0', 2e4)         # EARM - BCL2 val
 Parameter('BCL_XL_0', 2e4)       # EARM - BCL2 val
 Parameter('Poreformers_0', 1e5)  # EARM - BAX val
+Parameter('PORE_0', 0)
 Parameter('BAX_0', 1e5)          # EARM - BAX val
+Parameter('BAX_pore_0', 0)
 Parameter('BID_0', 4e4)          # EARM - BID val
 Parameter('clved_BID_0', 0)
 Parameter('BID_p7_0', 0)
@@ -362,7 +378,9 @@ Parameter('Caspase8_0', 2.0e4)   # EARM - C8 val
 Initial(BCLs(bh3=None, bh4=None)**cytoplasm, BCLs_0)
 Initial(BCL_XL(bh3=None)**mito_mem, BCL_XL_0)
 Initial(PoreFormers(bh3=None)**cytoplasm, Poreformers_0)
+Initial(PORE(t1=None)**mito_mem, PORE_0)
 Initial(BAX(bh3=None)**cytoplasm, BAX_0)
+Initial(BAX_pore(t1=None)**mito_mem, BAX_0)
 Initial(BID(bh3=None)**cytoplasm, BID_0)
 Initial(clved_BID(s1=None)**cytoplasm, clved_BID_0)
 Initial(BID_p7(s1=None)**cytoplasm, BID_p7_0)
