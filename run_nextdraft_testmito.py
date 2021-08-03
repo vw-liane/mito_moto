@@ -16,15 +16,16 @@ print(f"Observables-- y_out: \n{y_out}")
 # print(f"Check Bid-obs Content::\n{y_out['obsBid']}")
 
 # plot data
-# pl.ion()
-# pl.figure()
-# pl.plot(t, y_out['obsBid'], label="Bid")
-# pl.plot(t, y_out['obstBid'], label="tBid")
-# pl.plot(t, y_out['obsC8'], label="C8")
-# pl.legend()
-# pl.xlabel("Time (s)")
-# pl.ylabel("Molecules/ Cell")
-# pl.show()
+pl.ion()
+pl.figure()
+pl.plot(t, y_out['obclved_BID_free'], label="cBID_free")
+pl.plot(t, y_out['obBID_free'], label="BID_free")
+pl.plot(t, y_out['obBCLs_free_bh3'], label="BCLs_free_bh3")
+pl.plot(t, y_out['obBCLs_free_bh4'], label="BCLs_free_bh4")
+pl.legend()
+pl.xlabel("Time (s)")
+pl.ylabel("Molecules/ Cell")
+pl.show()
 
 
 monom = md.monomers
@@ -41,3 +42,8 @@ print(f"'BCLs' sites::\n{monom['BCLs'].sites}")
 prams = md.parameters
 print(f"\nExplore PARAMETERS::\n{prams}")
 print(f"\nValue of 'kf' param:: {prams['kf'].value}")
+
+
+print(f"\n\nModel SPECIES::\n")
+for sp in md.species:
+    print(f"\n{sp}")

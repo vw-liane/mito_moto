@@ -393,9 +393,14 @@ Initial(Caspase8(s1=None)**cytoplasm, Caspase8_0)
 
 ## -START- OBSERVABLES ##
 #########################
-#Observable('obBCLs_bound_bh3', BCLs(bh3=1))  # gave dangling bond error
-#Observable('obBCLs_bound_bh4', BCLs(bh4=1))   # gave dangling bond erro
-Observable('obBCLs_free', BCLs(bh3=None))
+Observable('obBCLs_free_bh3', BCLs(bh3=None))
+Observable('obBCLs_free_bh4', BCLs(bh4=None))
+Observable('obBCLs_1__bound_bh3', BCLs(bh3=1)%PoreFormers(bh3=1))
+Observable('obBCLs_bound_to_PORE', BCLs(bh3=2)%PORE(t1=2))
+Observable('obBCLs_bound_BH3s', BCLs(bh4=3)%BH3s(bh3=3))
+Observable('obBCL_sequester_PoreFormers', BCLs(bh3=4)%PoreFormers(bh3=4))
+Observable('obBH3s_sequester_BCLs', BH3s(bh3=5)%BCLs(bh3=5))
+Observable('ob_step1_BCLs_retrotranslocate_PoreFormers', PoreFormers(bh3=6)%BCLs(bh4=6))
 #Observable('obPoreformers_bound', PoreFormers(bh3=1))
 Observable('obPoreformers_free', PoreFormers(bh3=None))
 #Observable('obBAX_bound', BAX(bh3=1))
@@ -410,7 +415,8 @@ Observable('obBID_p7_free', BID_p7(s1=None))
 Observable('obBID_p15_free', BID_p15(s1=None))
 #Observable('obBH3s_bound', BH3s(bh3=1))
 Observable('obBH3s_free', BH3s(bh3=None))
-Observable('obCaspase8_bound', Caspase8(s1=7))
+Observable('obCaspase8_bound_BID_optionA', Caspase8(s1=7)%BID(bh3=7)) # diff prestep
+Observable('obCaspase8_bound_BID_optionB', Caspase8(s1=8)%BID(bh3=8)) # diff prestep
 Observable('obCaspase8_free', Caspase8(s1=None))
 ## END OBSERVABLES ##
 #####################
